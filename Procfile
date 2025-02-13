@@ -1,0 +1,1 @@
+web: gunicorn -w 4 -k gevent -b :10000 app:crear_app
