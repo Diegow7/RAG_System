@@ -4,5 +4,6 @@ sentence-transformers
 chromadb
 openai
 python-dotenv
-gunicorn
 flask_CORS
+gunicorn
+gevent
