@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poli SystemLM | God</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    :root {
+      --bg-color: white;
+      --text-color: black;
+      --primary-color: #f5b200;
+      --secondary-color: #0e4b89;
+      --bubble-bg: #f1f1f1;
+    }
+    body.dark-mode {
+      --bg-color: #0e4b89;
+      --text-color: #ffffff;
+      --bubble-bg: #1b3a61;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--bg-color);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s;
+    }
+    h1 {
+      text-align: center;
+      color: var(--primary-color);
+    }
+    .chat-box {
+      margin-top: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 8px;
+      background-color: var(--bg-color);
+      transition: background-color 0.3s;
+    }
+    .message {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 15px;
+      word-wrap: break-word;
+    }
+    .message.user .icon {
+      background-color: var(--primary-color);
+    }
+    .message.bot .icon {
+      background-color: var(--secondary-color);
+    }
+    .icon {
+      min-width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+    .message-content {
+      background: var(--bubble-bg);
+      color: var(--text-color);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      padding: 10px 15px;
+      border-radius: 5px;
+      max-width: 80%;
+      word-break: break-word;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    form {
+      display: flex;
+      margin-top: 20px;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: var(--secondary-color);
+    }
+    .toggle-theme {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-color);
+      transition: color 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <div class="toggle-theme" id="toggle-theme">
+    <i class="fa fa-moon"></i>
+  </div>
+  <div class="container">
+    <h1>Poli SystemLM</h1>
+    <div class="chat-box" id="chat-box">
+      <!-- Aquí se mostrarán las preguntas y respuestas -->
+    </div>
+    <form id="query-form">
+      <input type="text" id="query" placeholder="Escribe tu pregunta..." required>
+      <button type="submit">Enviar</button>
+    </form>
+  </div>
+
+  <script>
+    const toggleThemeBtn = document.getElementById('toggle-theme');
+    const body = document.body;
+
+    toggleThemeBtn.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      const icon = toggleThemeBtn.querySelector('i');
+      if (body.classList.contains('dark-mode')) {
+        icon.classList.replace('fa-moon', 'fa-sun');
+      } else {
+        icon.classList.replace('fa-sun', 'fa-moon');
+      }
+    });
+
+    document.getElementById('query-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const query = document.getElementById('query').value;
+
+      // Mostrar la pregunta del usuario en la interfaz
+      const chatBox = document.getElementById('chat-box');
+      const userMessage = `
+        <div class="message user">
+          <div class="icon"><i class="fa fa-user"></i></div>
+          <div class="message-content">${query}</div>
+        </div>
+      `;
+      chatBox.innerHTML += userMessage;
+
+      // Enviar la pregunta al servidor
+      const response = await fetch('/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query })
+      });
+      const result = await response.json();
+
+      // Mostrar la respuesta del sistema
+      const botMessage = `
+        <div class="message bot">
+          <div class="icon"><i class="fa fa-robot"></i></div>
+          <div class="message-content">${result.response}</div>
+        </div>
+      `;
+      chatBox.innerHTML += botMessage;
+      chatBox.scrollTop = chatBox.scrollHeight; // Desplazar hacia abajo
+      document.getElementById('query').value = ''; // Limpiar el campo de entrada
+    });
+  </script>
+</body>
+</html>
