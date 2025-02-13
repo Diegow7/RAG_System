@@ -21,7 +21,7 @@ def crear_app():
     model = SentenceTransformer('all-MiniLM-L6-v2')
 
     # Leer y cargar datos
-    file_path = "./Data/Entrevista_LuisaGonzales_JuanCueva.csv"
+    file_path = "./Data/corpus_preprocesado.csv"
     data = pd.read_csv(file_path, sep=",")
     documents = data['Entrevista'].tolist()
     ids = data['ID'].tolist()
