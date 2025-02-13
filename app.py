@@ -1,5 +1,6 @@
 import os
 from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 import chromadb
@@ -13,6 +14,7 @@ load_dotenv()
 
 # Inicializar Flask
 app = Flask(__name__)
+CORS(app)
 
 # Cargar el modelo de embeddings
 model = SentenceTransformer('all-MiniLM-L6-v2')
