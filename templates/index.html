@@ -117,6 +117,24 @@
       color: var(--text-color);
       transition: color 0.3s;
     }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .toggle-theme {
+        top: 10px;
+        right: 10px; /* Adjust the position to not overlap chat on small screens */
+      }
+      form {
+        flex-direction: column; /* Stack input and button vertically on small screens */
+      }
+      button {
+        margin-left: 0;
+        margin-top: 10px; /* Space between the input and the button */
+      }
+      .container {
+        padding: 10px; /* Reduce padding on small screens */
+      }
+    }
   </style>
 </head>
 <body>
@@ -178,8 +196,8 @@
         </div>
       `;
       chatBox.innerHTML += botMessage;
-      chatBox.scrollTop = chatBox.scrollHeight; // Desplazar hacia abajo
-      document.getElementById('query').value = ''; // Limpiar el campo de entrada
+      chatBox.scrollTop = chatBox.scrollHeight; // Scroll down
+      document.getElementById('query').value = ''; // Clear input field
     });
   </script>
 </body>
